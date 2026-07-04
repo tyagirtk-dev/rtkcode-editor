@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Termux Code Editor</title>
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+  <div id="app">
+
+    <!-- Top bar -->
+    <header id="topbar">
+      <button id="btn-toggle-sidebar" class="icon-btn" title="Toggle file explorer">☰</button>
+      <span id="workspace-name" class="workspace-name">Loading…</span>
+      <div id="breadcrumb" class="breadcrumb">No file open</div>
+      <div class="topbar-actions">
+        <button id="btn-search" class="icon-btn" title="Search (files / text)">🔍</button>
+        <button id="btn-find" class="icon-btn" title="Find (Ctrl+F)">Find</button>
+        <button id="btn-replace" class="icon-btn" title="Replace (Ctrl+H)">Repl</button>
+        <button id="btn-goto-line" class="icon-btn" title="Go to line (Ctrl+G)">:#</button>
+        <button id="btn-save" class="icon-btn primary" title="Save (Ctrl+S)">Save</button>
+        <button id="btn-settings" class="icon-btn" title="Settings">⚙</button>
+      </div>
+    </header>
+
+    <div id="body-wrap">
+
+      <!-- Sidebar: file explorer -->
+      <aside id="sidebar">
+        <div class="sidebar-header">
+          <span>EXPLORER</span>
+          <div class="sidebar-actions">
+            <button id="btn-new-file" class="icon-btn small" title="New file">＋📄</button>
+            <button id="btn-new-folder" class="icon-btn small" title="New folder">＋📁</button>
+            <button id="btn-refresh" class="icon-btn small" title="Refresh">⟳</button>
+            <button id="btn-collapse-all" class="icon-btn small" title="Collapse all">⤢</button>
+          </div>
+        </div>
+        <div id="explorer-tree" class="explorer-tree"></div>
+      </aside>
+
+      <!-- Main editing area -->
+      <main id="main-area">
+        <div id="tabs-bar" class="tabs-bar"></div>
+        <div id="editor-container" class="editor-container"></div>
+        <footer id="statusbar" class="statusbar">
+          <span id="status-position">Ln -, Col -</span>
+          <span id="status-language">plaintext</span>
+          <span id="status-dirty">—</span>
+        </footer>
+      </main>
+
+      <!-- Search panel (slide-in) -->
+      <aside id="search-panel" class="side-panel">
+        <div class="side-panel-header">
+          <span>SEARCH</span>
+          <button class="icon-btn small" onclick="document.getElementById('search-panel').classList.remove('open')">✕</button>
+        </div>
+        <div class="side-panel-body">
+          <select id="search-mode" class="search-mode">
+            <option value="files">File names</option>
+            <option value="text">Text in files</option>
+          </select>
+          <input id="search-input" type="text" placeholder="Search… (press Enter)" class="search-input" />
+          <div id="search-results" class="search-results"></div>
+        </div>
+      </aside>
+
+      <!-- Settings panel (slide-in) -->
+      <aside id="settings-panel" class="side-panel">
+        <div class="side-panel-header">
+          <span>SETTINGS</span>
+          <button class="icon-btn small" onclick="document.getElementById('settings-panel').classList.remove('open')">✕</button>
+        </div>
+        <div class="side-panel-body">
+          <label class="setting-row">
+            <span>Font size</span>
+            <input id="setting-font-size" type="number" min="10" max="32" step="1" />
+          </label>
+          <label class="setting-row">
+            <span>Minimap</span>
+            <input id="setting-minimap" type="checkbox" />
+          </label>
+          <label class="setting-row">
+            <span>Word wrap</span>
+            <input id="setting-wordwrap" type="checkbox" />
+          </label>
+          <label class="setting-row">
+            <span>Auto save</span>
+            <input id="setting-autosave" type="checkbox" />
+          </label>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+
+  <!-- Context menu (right-click / long-press) -->
+  <div id="context-menu" class="context-menu"></div>
+
+  <!-- Modal (prompt / confirm) -->
+  <div id="modal-overlay" class="modal-overlay">
+    <div class="modal-box">
+      <div id="modal-title" class="modal-title">Title</div>
+      <div id="modal-message" class="modal-message"></div>
+      <input id="modal-input" type="text" class="modal-input" />
+      <div class="modal-actions">
+        <button id="modal-cancel" class="modal-btn">Cancel</button>
+        <button id="modal-confirm" class="modal-btn primary">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notifications -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Monaco Editor loader (bundled locally - no CDN, works fully offline) -->
+  <script src="./vendor/monaco-editor/min/vs/loader.js"></script>
+
+  <!-- App scripts -->
+  <script src="./js/settings.js"></script>
+  <script src="./js/api.js"></script>
+  <script src="./js/toast.js"></script>
+  <script src="./js/modal.js"></script>
+  <script src="./js/contextmenu.js"></script>
+  <script src="./js/tabs.js"></script>
+  <script src="./js/editor.js"></script>
+  <script src="./js/explorer.js"></script>
+  <script src="./js/app.js"></script>
+</body>
+</html>

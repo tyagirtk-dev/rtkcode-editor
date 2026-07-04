@@ -1,0 +1,107 @@
+#!/data/data/com.termux/files/usr/bin/bash
+#
+# code - launch the Termux Code Editor for a given path.
+#
+# Usage:
+#   code .                    open the current directory
+#   code ~/projects/myapp     open a specific folder
+#   code app.py               open a specific file (workspace = its folder)
+#   code templates/index.html open a specific file
+#
+set -euo pipefail
+
+INSTALL_DIR="$HOME/.termux-code-editor"
+BACKEND_DIR="$INSTALL_DIR/backend"
+PYTHON_BIN="${PYTHON_BIN:-python3}"
+
+if [ ! -d "$BACKEND_DIR" ]; then
+  echo "error: Termux Code Editor is not installed (missing $BACKEND_DIR)." >&2
+  echo "Run install.sh from the project first." >&2
+  exit 1
+fi
+
+TARGET="${1:-.}"
+
+if [ ! -e "$TARGET" ]; then
+  echo "error: path not found: $TARGET" >&2
+  exit 1
+fi
+
+# Resolve to an absolute, symlink-free path.
+ABS_PATH="$(realpath "$TARGET")"
+
+OPEN_FILE=""
+if [ -f "$ABS_PATH" ]; then
+  WORKSPACE_ROOT="$(dirname "$ABS_PATH")"
+  OPEN_FILE="$(basename "$ABS_PATH")"
+else
+  WORKSPACE_ROOT="$ABS_PATH"
+fi
+
+# Find a free TCP port starting at 8765, so multiple `code` sessions can run at once.
+find_free_port() {
+  local port=8765
+  local max_port=8865
+  while [ "$port" -le "$max_port" ]; do
+    if ! (exec 3<>"/dev/tcp/127.0.0.1/$port") 2>/dev/null; then
+      echo "$port"
+      return 0
+    fi
+    port=$((port + 1))
+  done
+  echo "error: no free port found between 8765-8865" >&2
+  exit 1
+}
+PORT="$(find_free_port)"
+
+export WORKSPACE_ROOT
+export OPEN_FILE
+export PORT
+export HOST="127.0.0.1"
+
+URL="http://127.0.0.1:${PORT}/"
+
+echo "Termux Code Editor"
+echo "  Workspace : $WORKSPACE_ROOT"
+if [ -n "$OPEN_FILE" ]; then
+  echo "  Open file : $OPEN_FILE"
+fi
+echo "  Starting server..."
+
+"$PYTHON_BIN" "$BACKEND_DIR/main.py" &
+SERVER_PID=$!
+
+cleanup() {
+  kill "$SERVER_PID" >/dev/null 2>&1 || true
+}
+trap cleanup EXIT INT TERM
+
+# Wait for the server to come up before printing the final URL.
+READY=0
+for _ in $(seq 1 50); do
+  if curl -s -o /dev/null "$URL" 2>/dev/null; then
+    READY=1
+    break
+  fi
+  if ! kill -0 "$SERVER_PID" 2>/dev/null; then
+    echo "error: server process exited unexpectedly. Check the output above." >&2
+    exit 1
+  fi
+  sleep 0.2
+done
+
+if [ "$READY" -eq 0 ]; then
+  echo "warning: server did not respond within 10s, it may still be starting up." >&2
+fi
+
+echo ""
+echo "  Open this URL in your browser:"
+echo "  $URL"
+echo ""
+echo "  Press Ctrl+C to stop the server."
+
+if command -v termux-open-url >/dev/null 2>&1; then
+  termux-open-url "$URL" >/dev/null 2>&1 || true
+fi
+
+wait "$SERVER_PID"
