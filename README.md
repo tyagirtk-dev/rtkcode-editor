@@ -65,7 +65,22 @@ bash install.sh
 ```bash
 bash uninstall.sh
 ```
+> 🚀 **RTKCode Editor** brings a VS Code–like coding experience to Termux with a modern Monaco Editor interface running directly in your browser. No VNC, no desktop environment, and no complicated setup—just install, run `code .`, and start coding instantly.
 
+🎬 **Demo Video:** `assets/rtkcode-demo.mp4`
+
+### ✨ Highlights
+
+- ⚡ VS Code–style interface powered by Monaco Editor
+- 📂 Open any project with `code .`
+- 📝 Fast file editing with instant save
+- 🌐 Runs locally in your browser
+- 📱 Designed for Android + Termux
+- 🔒 No cloud account required
+- 🚫 No VNC or desktop environment needed
+- 📦 One-command installation
+- 🛠 Lightweight and open source
+- ❤️ Built for the Termux community
 ---
 
 ## Usage
