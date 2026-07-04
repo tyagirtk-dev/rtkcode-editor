@@ -42,6 +42,21 @@ source "$VENV_DIR/bin/activate"
 log "Installing/Updating Python dependencies..."
 pip install --quiet -r requirements.txt
 
+# --- 4. Install Application Files ---
+log "Installing RTKCode application files..."
+
+mkdir -p "$INSTALL_DIR"
+
+rm -rf "$INSTALL_DIR/backend"
+rm -rf "$INSTALL_DIR/frontend"
+
+cp -r backend "$INSTALL_DIR/"
+cp -r frontend "$INSTALL_DIR/"
+
+[ -d "$INSTALL_DIR/backend" ] || err "Backend installation failed."
+[ -f "$INSTALL_DIR/backend/main.py" ] || err "Backend files missing."
+[ -d "$INSTALL_DIR/frontend" ] || err "Frontend installation failed."
+
 # --- 4. Monaco Bundle (Auto-retry logic) ---
 VENDOR_DIR="$INSTALL_DIR/frontend/vendor/monaco-editor"
 if [ ! -f "$VENDOR_DIR/min/vs/loader.js" ]; then
