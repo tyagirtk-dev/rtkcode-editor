@@ -42,32 +42,11 @@ disk — there are never any copies.
 
 ---
 
-## Installation
-
-```bash
-git clone <this-repo> termux-code-editor   # or unzip the project
-cd termux-code-editor
-bash install.sh
-```
-
-`install.sh` will:
-
-1. Install `python`, `pip`, `curl`, `tar` via `pkg` if not already present.
-2. `pip install` the packages in `requirements.txt` (FastAPI + Uvicorn).
-3. Copy `backend/` and `frontend/` into `~/.termux-code-editor`.
-4. Download and unpack the Monaco Editor bundle into
-   `~/.termux-code-editor/frontend/vendor/monaco-editor` so the UI works
-   completely offline afterwards.
-5. Install the `code` command into `$PREFIX/bin/code`.
-
-## Uninstall
-
-```bash
-bash uninstall.sh
-```
 > 🚀 **RTKCode Editor** brings a VS Code–like coding experience to Termux with a modern Monaco Editor interface running directly in your browser. No VNC, no desktop environment, and no complicated setup—just install, run `code .`, and start coding instantly.
 
-🎬 **Demo Video:** `assets/rtkcode-demo.mp4`
+## 🎬 Demo
+
+**▶ [Watch RTKCode Demo](assets/rtkcode-demo.mp4)**
 
 ### ✨ Highlights
 
@@ -79,10 +58,33 @@ bash uninstall.sh
 - 🔒 No cloud account required
 - 🚫 No VNC or desktop environment needed
 - 📦 One-command installation
-- 🛠 Lightweight and open source
+- 📥 Automatically downloads and configures Monaco Editor
+- 🐍 Automatically creates and manages a Python virtual environment
+- 🔄 Safe reinstall and upgrade support
+- 🛠 Lightweight, fast and open source
 - ❤️ Built for the Termux community
+
 ---
 
+## Installation
+
+```bash
+git clone https://github.com/tyagirtk-dev/rtkcode-editor.git
+cd rtkcode-editor
+bash install.sh
+```
+
+`install.sh` will:
+
+1. Install required Termux packages automatically.
+2. Create and configure a Python virtual environment.
+3. Install all Python dependencies.
+4. Copy the backend and frontend into `~/.termux-code-editor`.
+5. Download and configure Monaco Editor automatically.
+6. Install the global `code` command.
+7. Verify the installation with built-in health checks.
+
+--
 ## Usage
 
 ```bash
